@@ -1,5 +1,5 @@
 require "malt_analysis/version"
 
 module MaltAnalysis
-  # Your code goes here...
+  autoload :Weyermann, File.join('malt_analysis', 'weyermann')
 end
