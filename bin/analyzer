@@ -5,15 +5,18 @@
 require "bundler/setup"
 require "malt_analysis"
 require 'pdf-reader'
+require 'logger'
 
 #URL = 'http://www.weyermann.de/pdf_analyses/'.freeze
 URL = '/home/brundage/Desktop/'.freeze
 
+l = Logger.new(STDERR)
+l.level = Logger::DEBUG
 ARGV.each do |f|
   url = URL + f + '.pdf'
   reader = PDF::Reader.new(url)
   p = reader.pages.first
-  s = MaltAnalysis::Weyermann.new str: p.text
+  s = MaltAnalysis::Weyermann.new str: p.text, logger: l
   s.process
   s.scan
 

@@ -1,13 +1,16 @@
 require 'strscan'
+
 module MaltAnalysis
   class Weyermann
 
     attr_reader :results
 
-    def initialize(str:)
+    def initialize(str:, logger: nil)
+      # TODO this scanner misses the Kolbach Index
       @results = {}
       @scanner = StringScanner.new(str)
       @str = str
+      @logger = logger
       freeze
     end
 
@@ -24,19 +27,33 @@ module MaltAnalysis
       grab_date
       skip_to_analysis
       while m = scanner.scan_until(/\[[^\]]+\]/)
-        process_lines m.squeeze(' ').strip
+        s = m.squeeze(' ').strip
+        debug { s }
+        process_lines s
       end
     end
 
 private
 
-    attr_reader :scanner, :str
+    attr_reader :logger, :scanner, :str
+
+    def debug(&block)
+      return if logger.nil?
+      logger.debug name, &block
+    end
+
 
     def grab_date
       s = "Date of Production".freeze
       scanner.scan_until /#{s}:\s+/
       d = scanner.scan /\d\d\d\d-\d\d-\d\d/
+      debug { "%s = %s\n" % [s, d] }
       results[s] = d
+    end
+
+
+    def name
+      self.class.name
     end
 
 
@@ -63,16 +80,18 @@ private
     def process_incomplete(l)
       a = l.split(' ')
       if a.size < 3
-        STDERR.puts "Don't know how to handle #{l}"
+        debug { "Don't know how to handle #{l}" }
         return
       end
       a[-1] = strip_brackets(a[-1])
+      debug { "%s = %s\n" % [ a[0..-3].join(" "), a[-2..-1].join(" ") ] }
       results[ a[0..-3].join(" ") ] = a[-2..-1].join(" ")
     end
 
 
     def process_partial(l)
       p = l.split(/:\s+/)
+      debug { "%s = %s\n" % [ p[0], strip_brackets(p[1]) ] }
       results[p[0]] = strip_brackets(p[1])
     end
 
@@ -80,6 +99,7 @@ private
     def process_full(l)
       m = /^([^:]+): ([^\[]+) \[([^\]]+)/.match(l)
       if m
+        debug { "%s = %s\n" % [ m[1], m.values_at(2,3).join(' ') ] }
         results[m[1]] = m.values_at(2,3).join(' ')
       else
         if l.count(":") == 1
