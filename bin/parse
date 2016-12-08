@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+# http://www.weyermann.de/pdf_analyses/R245-002060-02.pdf
+# https://bsgcraftbrewing.com/Resources/CraftBrewing/COA/COA_20161011_24149-4_TRCK%2032525_BSG_SHA1_2P.pdf
+
+require "bundler/setup"
+require "malt_analysis"
+require 'logger'
+
+#URL = 'http://www.weyermann.de/pdf_analyses/'.freeze
+URL = '/home/brundage/Desktop/'.freeze
+
+l = Logger.new(STDOUT)
+l.level = Logger::DEBUG
+
+maltster = ARGV.shift.intern
+
+ARGV.each do |f|
+  klass = MaltAnalysis.parser_for malt: maltster
+  raise "Don't know how to parse #{maltster}" unless klass
+  s = klass.new filename: f, logger: l
+  puts s.text
+  puts '-' * 80
+
+  s.dump
+  puts '-' * 80
+
+  s.scan
+  puts '-' * 80
+
+  s.results.keys.sort { |a,b| a.downcase <=> b.downcase }.each do |k|
+    puts "%24s --> %s\n" % [k, s.results[k]]
+  end
+end

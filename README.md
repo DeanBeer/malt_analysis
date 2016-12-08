@@ -1,8 +1,9 @@
 # MaltAnalysis
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/malt_analysis`. To experiment with that code, run `bin/console` for an interactive prompt.
+Malt analysis parser.
 
-TODO: Delete this and the text above, and describe your gem
+[BSG analysis](https://bsgcraftbrewing.com/MaltAnalysis)
+[Rahr example (24149-4)](https://bsgcraftbrewing.com/Resources/CraftBrewing/COA/COA_20161011_24149-4_TRCK%2032525_BSG_SHA1_2P.pdf)
 
 ## Installation
 
@@ -22,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Don't use this yet
 
 ## Development
 
@@ -32,5 +33,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/malt_analysis.
+Bug reports and pull requests are welcome on GitHub at https://github.com/NewRepublicBrewing/malt_analysis.
 
