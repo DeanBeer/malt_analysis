@@ -19,14 +19,15 @@ ARGV.each do |f|
   klass = MaltAnalysis.parser_for malt: maltster
   raise "Don't know how to parse #{maltster}" unless klass
   s = klass.new filename: f, logger: l
+
+  puts "---- text " + '-' * 70
   puts s.text
-  puts '-' * 80
 
+  puts "---- dump " + '-' * 70
   s.dump
-  puts '-' * 80
 
+  puts "---- scan " + '-' * 70
   s.scan
-  puts '-' * 80
 
   s.results.keys.sort { |a,b| a.downcase <=> b.downcase }.each do |k|
     puts "%24s --> %s\n" % [k, s.results[k]]
